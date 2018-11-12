@@ -6,7 +6,8 @@ num_scrolls=10
 url='https://www.reddit.com/r/btc/'
 
 #open the browser and visit the url
-driver = webdriver.Chrome('chromedriver.exe')
+#driver = webdriver.Chrome('chromedriver.exe')
+driver=webdriver.Chrome(executable_path=r"/usr/local/bin/chromedriver")
 driver.get(url)
 
 done=set()

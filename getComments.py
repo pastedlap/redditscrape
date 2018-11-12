@@ -9,10 +9,19 @@ def parseComment(comment,fw):
     if re.search('\(\d+$',text):text=''    
     fw.write('\t'.join([level,user,points,text])+'\n')
     
-    
+def expandComment(driver):
+    num_elems=len(driver.find_elements_by_css_selector('p.s1tyd4zp-1'))
+    for i in range(num_elems):
+        try:
+            elem=driver.find_element_by_css_selector('p.s1tyd4zp-1')
+            driver.execute_script("arguments[0].click();", elem)
+            time.sleep(0.1)
+        except:
+            print('load fail')
 #=============================================
 
-driver = webdriver.Chrome('chromedriver.exe')
+#driver = webdriver.Chrome('chromedriver.exe')
+driver=webdriver.Chrome(executable_path=r"/usr/local/bin/chromedriver")
 
 fw=codecs.open('comments.txt','w',encoding='utf8')
 
@@ -37,7 +46,9 @@ for link in links:
         else:
             consecutive_failures=0
             prevLen=currLen
+    
     fw.write('@@@THREAD@@@\t'+link+'\t'+first+'\n')
+    expandComment(driver)
     comments=driver.find_elements_by_css_selector('div.s136il31-0')
     for comment in comments:
         try:
