@@ -32,7 +32,7 @@ def get_threadlinks(urllst):
         driver.get(url)
         
         done=set()
-        fw=open(coin + '_threadLinks.txt','w')
+        fw=open(r'./data/links/' + coin + '_threadLinks.txt','w')
         for i in range(num_scrolls):
         
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")

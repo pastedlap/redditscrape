@@ -1,5 +1,8 @@
 from selenium import webdriver
 import time,codecs,re
+import glob
+
+
 
 def parseComment(comment,fw):
     txt=comment.text.replace('\n', ' ').strip()
@@ -18,43 +21,47 @@ def expandComment(driver):
             time.sleep(0.1)
         except:
             print('load fail')
-#=============================================
 
+def get_comments(fl_threadlinks):
 #driver = webdriver.Chrome('chromedriver.exe')
-driver=webdriver.Chrome(executable_path=r"/usr/local/bin/chromedriver")
-
-fw=codecs.open('comments.txt','w',encoding='utf8')
-
-with open('threadLinks.txt') as f:links=f.readlines()
-for link in links:
-    link=link.strip()
-    driver.get(link)
-    first=driver.find_elements_by_css_selector('div.s1knm1ot-9')[0].text
-    first=re.sub('[\t\n]',' ',first)
+    driver=webdriver.Chrome(executable_path=r"/usr/local/bin/chromedriver")
     
-    prevLen=driver.page_source
+    fw=codecs.open('comments.txt','w',encoding='utf8')
     
-    consecutive_failures=0
-    
-    while consecutive_failures<3:
+    with open('threadLinks.txt') as f:links=f.readlines()
+    for link in links:
+        link=link.strip()
+        driver.get(link)
+        first=driver.find_elements_by_css_selector('div.s1knm1ot-9')[0].text
+        first=re.sub('[\t\n]',' ',first)
         
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(2)
-        currLen=driver.page_source
-        if currLen==prevLen:
-            consecutive_failures+=1
-        else:
-            consecutive_failures=0
-            prevLen=currLen
+        prevLen=driver.page_source
+        
+        consecutive_failures=0
+        
+        while consecutive_failures<3:
+            
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(2)
+            currLen=driver.page_source
+            if currLen==prevLen:
+                consecutive_failures+=1
+            else:
+                consecutive_failures=0
+                prevLen=currLen
+        
+        fw.write('@@@THREAD@@@\t'+link+'\t'+first+'\n')
+        expandComment(driver)
+        comments=driver.find_elements_by_css_selector('div.s136il31-0')
+        for comment in comments:
+            try:
+                parseComment(comment,fw)
+            except:
+                print('comment fail')
+        
+        fw.write('\n\n')
+    fw.close()
+def get_flnames():
+    print(glob.glob("./data/links/*.txt"))
+if __name__ == "__main__":
     
-    fw.write('@@@THREAD@@@\t'+link+'\t'+first+'\n')
-    expandComment(driver)
-    comments=driver.find_elements_by_css_selector('div.s136il31-0')
-    for comment in comments:
-        try:
-            parseComment(comment,fw)
-        except:
-            print('comment fail')
-    
-    fw.write('\n\n')
-fw.close()
