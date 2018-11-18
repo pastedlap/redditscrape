@@ -1,6 +1,7 @@
 from selenium import webdriver
 import time,codecs,re
 import glob
+import os
 
 exe_path=r"/usr/local/bin/chromedriver"
 
@@ -28,8 +29,9 @@ def expandComment(driver):
 
 def get_comments(fl_name):
 #driver = webdriver.Chrome('chromedriver.exe')
-    driver=webdriver.Chrome(executable_path=exe_path)
     coin=re.search('./data/links/(.+?)_threadLinks.txt',fl_name).group(1)
+    if os.stat(r'./data/comments/'+ coin +'_comments.txt').st_size == 0: return
+    driver=webdriver.Chrome(executable_path=exe_path)
     fw=codecs.open(r'./data/comments/'+ coin +'_comments.txt','w',encoding='utf8')
     with open(fl_name) as f:links=f.readlines()
     for link in links:
@@ -67,8 +69,8 @@ def get_comments(fl_name):
     fw.close()
     driver.quit()
 def get_fl_names():
-#    fl_names=glob.glob("./data/links/*.txt")
-    fl_names=['./data/links/Ripple_threadLinks.txt']
+    fl_names=glob.glob("./data/links/*.txt")
+#    fl_names=['./data/links/Ripple_threadLinks.txt']
     for fl_name in fl_names:
         try:
             get_comments(fl_name)
