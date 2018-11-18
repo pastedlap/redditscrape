@@ -1,3 +1,5 @@
 chromedriver.exe
 comments.txt
 threadLinks.txt
+data/comments/*
+data/links/*
