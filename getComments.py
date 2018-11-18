@@ -2,7 +2,7 @@ from selenium import webdriver
 import time,codecs,re
 import glob
 
-
+exe_path=r"/usr/local/bin/chromedriver"
 
 def parseComment(comment,fw):
     txt=comment.text.replace('\n', ' ').strip()
@@ -24,7 +24,7 @@ def expandComment(driver):
 
 def get_comments(fl_threadlinks):
 #driver = webdriver.Chrome('chromedriver.exe')
-    driver=webdriver.Chrome(executable_path=r"/usr/local/bin/chromedriver")
+    driver=webdriver.Chrome(executable_path=exe_path)
     
     fw=codecs.open('comments.txt','w',encoding='utf8')
     
@@ -61,7 +61,8 @@ def get_comments(fl_threadlinks):
         
         fw.write('\n\n')
     fw.close()
-def get_flnames():
-    print(glob.glob("./data/links/*.txt"))
+def get_fl_names():
+    fl_names=glob.glob("./data/links/*.txt")
+    
 if __name__ == "__main__":
     

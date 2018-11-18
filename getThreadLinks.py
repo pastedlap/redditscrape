@@ -1,5 +1,6 @@
 from selenium import webdriver
 import time
+exe_path=r"/usr/local/bin/chromedriver"
 
 def get_url():
     """
@@ -20,7 +21,7 @@ def get_url():
 #driver = webdriver.Chrome('chromedriver.exe')
 def url_test():
     urllst=get_url()
-    driver=webdriver.Chrome(executable_path=r"/usr/local/bin/chromedriver")
+    driver=webdriver.Chrome(executable_path=exe_path)
     for url in urllst:
         driver.get(url)
 
@@ -28,7 +29,7 @@ def get_threadlinks(urllst):
     num_scrolls=10
     for url in urllst:
         coin=url.split('/')[-2]
-        driver=webdriver.Chrome(executable_path=r"/usr/local/bin/chromedriver")
+        driver=webdriver.Chrome(executable_path=exe_path)
         driver.get(url)
         
         done=set()
@@ -48,6 +49,7 @@ def get_threadlinks(urllst):
             
         
         fw.close()
+        driver.quit()
 if __name__ == "__main__":
     urllst=get_url()
     get_threadlinks(urllst)
