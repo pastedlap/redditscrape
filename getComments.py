@@ -7,6 +7,10 @@ exe_path=r"/usr/local/bin/chromedriver"
 def parseComment(comment,fw):
     txt=comment.text.replace('\n', ' ').strip()
     if len(txt)==0:return
+    M_del=re.search('level (\d+) Comment deleted (\d+) (.+?) ago',txt)
+    if M_del is not None: return
+    M_del=re.search('Continue this thread',txt)
+    if M_del is not None: return
     M=re.search('level (\d+) (.+?) (.+?) points? .+?ago (.+) ',txt)
     level,user,points,text=M.group(1),M.group(2),M.group(3),M.group(4).strip().replace('\t',' ')
     if re.search('\(\d+$',text):text=''    
@@ -18,7 +22,7 @@ def expandComment(driver):
         try:
             elem=driver.find_element_by_css_selector('p.s1tyd4zp-1')
             driver.execute_script("arguments[0].click();", elem)
-            time.sleep(0.1)
+            time.sleep(1)
         except:
             print('load fail')
 
@@ -41,7 +45,7 @@ def get_comments(fl_name):
         while consecutive_failures<3:
             
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            time.sleep(2)
+            time.sleep(1.5)
             currLen=driver.page_source
             if currLen==prevLen:
                 consecutive_failures+=1
@@ -56,13 +60,15 @@ def get_comments(fl_name):
             try:
                 parseComment(comment,fw)
             except:
+                
                 print('comment fail')
         
         fw.write('\n\n')
     fw.close()
     driver.quit()
 def get_fl_names():
-    fl_names=glob.glob("./data/links/*.txt")
+#    fl_names=glob.glob("./data/links/*.txt")
+    fl_names=['./data/links/Ripple_threadLinks.txt']
     for fl_name in fl_names:
         try:
             get_comments(fl_name)
