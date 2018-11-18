@@ -22,13 +22,12 @@ def expandComment(driver):
         except:
             print('load fail')
 
-def get_comments(fl_threadlinks):
+def get_comments(fl_name):
 #driver = webdriver.Chrome('chromedriver.exe')
     driver=webdriver.Chrome(executable_path=exe_path)
-    
-    fw=codecs.open('comments.txt','w',encoding='utf8')
-    
-    with open('threadLinks.txt') as f:links=f.readlines()
+    coin=re.search('./data/links/(.+?)_threadLinks.txt',fl_name).group(1)
+    fw=codecs.open(r'./data/comments/'+ coin +'_comments.txt','w',encoding='utf8')
+    with open(fl_name) as f:links=f.readlines()
     for link in links:
         link=link.strip()
         driver.get(link)
@@ -61,8 +60,14 @@ def get_comments(fl_threadlinks):
         
         fw.write('\n\n')
     fw.close()
+    driver.quit()
 def get_fl_names():
     fl_names=glob.glob("./data/links/*.txt")
+    for fl_name in fl_names:
+        try:
+            get_comments(fl_name)
+        except:
+            print(fl_name)
     
 if __name__ == "__main__":
-    
+    get_fl_names()
