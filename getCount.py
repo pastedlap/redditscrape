@@ -6,7 +6,7 @@ Created on Sun Nov 18 13:32:42 2018
 @author: ayx
 """
 import glob
-def count_comments():
+def count_threads():
     fl_names=glob.glob("./data/comments/*.txt")
     cnter=0
     for fl_name in fl_names:
@@ -14,7 +14,7 @@ def count_comments():
             contents = f.read()
             cnt = contents.count("@@@THREAD@@@")   
             cnter+=cnt
-    print('Total comment count is ' + str(cnter))
+    print('Total thread count is ' + str(cnter))
     return cnter
 def count_links():
     fl_names=glob.glob("./data/links/*.txt")
@@ -26,3 +26,6 @@ def count_links():
             cnter+=cnt
     print('Total links count is ' + str(cnter))
     return cnter
+
+count_comments()
+count_links()

@@ -30,7 +30,7 @@ def expandComment(driver):
 def get_comments(fl_name):
 #driver = webdriver.Chrome('chromedriver.exe')
     coin=re.search('./data/links/(.+?)_threadLinks.txt',fl_name).group(1)
-    if os.stat(r'./data/comments/'+ coin +'_comments.txt').st_size == 0: return
+    if os.stat(r'./data/comments/'+ coin +'_comments.txt').st_size > 44533: return
     driver=webdriver.Chrome(executable_path=exe_path)
     fw=codecs.open(r'./data/comments/'+ coin +'_comments.txt','w',encoding='utf8')
     with open(fl_name) as f:links=f.readlines()
@@ -63,14 +63,14 @@ def get_comments(fl_name):
                 parseComment(comment,fw)
             except:
                 
-                print('comment fail')
+                print('failed comment: %s' % (comment.text.replace('\n', ' ').strip()))
         
         fw.write('\n\n')
     fw.close()
     driver.quit()
 def get_fl_names():
     fl_names=glob.glob("./data/links/*.txt")
-#    fl_names=['./data/links/Ripple_threadLinks.txt']
+#    fl_names=['./data/links/TRON_threadLinks.txt']
     for fl_name in fl_names:
         try:
             get_comments(fl_name)
